@@ -19,11 +19,13 @@ export default function SettingsClient({
   initialTypes,
   initialProfiles,
   currentUserId,
+  userRole = 'admin',
 }: {
   initialTypes: any[]
   initialProfiles: any[]
   currentUserId: string
-}) {
+  userRole?: Role
+}){
   const router = useRouter()
   const toast = useToast()
   useRealtimeDocumentTypes()
@@ -81,10 +83,14 @@ export default function SettingsClient({
     }
   }
 
-  const tabs = [
-    { id: 'taxonomy' as const, label: 'Document Taxonomy', icon: 'category' },
-    { id: 'users' as const, label: 'User Management', icon: 'manage_accounts' },
-  ]
+  const tabs = userRole === 'admin' 
+    ? [
+        { id: 'taxonomy' as const, label: 'Document Taxonomy', icon: 'category' },
+        { id: 'users' as const, label: 'User Management', icon: 'manage_accounts' },
+      ]
+    : [
+        { id: 'taxonomy' as const, label: 'Document Taxonomy', icon: 'category' },
+      ]
 
   return (
     <div className="space-y-6">
@@ -149,44 +155,48 @@ export default function SettingsClient({
                         <span className="w-2 h-2 rounded-full bg-primary dark:bg-blue-400" />
                         <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t.name}</span>
                       </div>
-                      <button
-                        id={`delete-type-${t.id}`}
-                        onClick={() => setDeletingTypeId(t.id)}
-                        className="text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
-                      >
-                        <span className="material-symbols-outlined text-sm">delete</span>
-                      </button>
+                      {userRole === 'admin' && (
+                        <button
+                          id={`delete-type-${t.id}`}
+                          onClick={() => setDeletingTypeId(t.id)}
+                          className="text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                        >
+                          <span className="material-symbols-outlined text-sm">delete</span>
+                        </button>
+                      )}
                     </div>
                   ))
                 )}
               </div>
             </div>
 
-            {/* Add New */}
-            <div className="bg-slate-50 dark:bg-slate-800/20 p-6 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
-              <h4 className="text-sm font-bold font-label text-slate-500 uppercase tracking-widest mb-4">
-                Register New Category
-              </h4>
-              <form onSubmit={handleCreateType} className="space-y-4">
-                <input
-                  required
-                  name="name"
-                  id="new-category-input"
-                  className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500/20 text-slate-900 dark:text-slate-100 outline-none"
-                  type="text"
-                  placeholder="e.g. Identity Documents, Board Minutes..."
-                />
-                <button
-                  id="add-category-btn"
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-primary hover:opacity-90 text-white px-4 py-3 rounded-lg font-bold shadow-sm transition-opacity disabled:opacity-50 text-sm flex justify-center items-center gap-2"
-                >
-                  <span className="material-symbols-outlined text-sm">add</span>
-                  {isSubmitting ? 'Registering...' : 'Add Category'}
-                </button>
-              </form>
-            </div>
+            {/* Add New - Only for admins */}
+            {userRole === 'admin' && (
+              <div className="bg-slate-50 dark:bg-slate-800/20 p-6 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
+                <h4 className="text-sm font-bold font-label text-slate-500 uppercase tracking-widest mb-4">
+                  Register New Category
+                </h4>
+                <form onSubmit={handleCreateType} className="space-y-4">
+                  <input
+                    required
+                    name="name"
+                    id="new-category-input"
+                    className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500/20 text-slate-900 dark:text-slate-100 outline-none"
+                    type="text"
+                    placeholder="e.g. Identity Documents, Board Minutes..."
+                  />
+                  <button
+                    id="add-category-btn"
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-primary hover:opacity-90 text-white px-4 py-3 rounded-lg font-bold shadow-sm transition-opacity disabled:opacity-50 text-sm flex justify-center items-center gap-2"
+                  >
+                    <span className="material-symbols-outlined text-sm">add</span>
+                    {isSubmitting ? 'Registering...' : 'Add Category'}
+                  </button>
+                </form>
+              </div>
+            )}
           </div>
         </div>
       )}

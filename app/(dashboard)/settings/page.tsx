@@ -15,22 +15,24 @@ export default async function SettingsPage() {
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
   const role = profile?.role || 'viewer'
 
-  // Only admins can access settings
-  if (role !== 'admin') redirect('/')
+  // Only admins and accountants can access settings
+  if (role !== 'admin' && role !== 'accountant') redirect('/')
 
   const [documentTypes, profiles] = await Promise.all([
     getDocumentTypes(),
-    getAllProfiles().catch(() => []),
+    role === 'admin' ? getAllProfiles().catch(() => []) : Promise.resolve([]),
   ])
 
   return (
     <div className="animate-in fade-in duration-500 max-w-4xl mx-auto">
       <header className="mb-10">
         <h2 className="text-3xl font-extrabold font-headline tracking-tight text-primary dark:text-blue-400">
-          System Configuration
+          {role === 'admin' ? 'System Configuration' : 'Configuration'}
         </h2>
         <p className="text-on-secondary-container dark:text-slate-400 mt-2 font-body">
-          Manage vault taxonomies, retention rules, and access policies.
+          {role === 'admin' 
+            ? 'Manage vault taxonomies, retention rules, and access policies.'
+            : 'View and manage document categories for your work.'}
         </p>
       </header>
 
@@ -38,6 +40,7 @@ export default async function SettingsPage() {
         initialTypes={documentTypes || []}
         initialProfiles={profiles || []}
         currentUserId={user.id}
+        userRole={role}
       />
     </div>
   )

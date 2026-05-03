@@ -13,7 +13,7 @@ const allNavItems = [
   { href: '/upload', label: 'Upload', icon: 'cloud_upload', roles: ['admin', 'accountant'] as Role[] },
   { href: '/clients', label: 'Clients', icon: 'group', roles: ['admin', 'accountant'] as Role[] },
   { href: '/audit-logs', label: 'Audit Logs', icon: 'history', roles: ['admin'] as Role[] },
-  { href: '/settings', label: 'Settings', icon: 'settings', roles: ['admin'] as Role[] },
+  { href: '/settings', label: 'Settings', icon: 'settings', roles: ['admin', 'accountant'] as Role[] },
 ]
 
 const roleLabels: Record<Role, string> = {
