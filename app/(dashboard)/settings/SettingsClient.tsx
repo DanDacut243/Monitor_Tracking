@@ -128,13 +128,13 @@ export default function SettingsClient({
             </div>
           </div>
 
-          <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+          <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start overflow-x-auto">
             {/* Active Categories */}
             <div className="space-y-4">
               <h4 className="text-sm font-bold font-label text-slate-400 uppercase tracking-widest">
                 Active Categories ({initialTypes.length})
               </h4>
-              <div className="space-y-2">
+              <div className="space-y-2 max-h-96 overflow-y-auto">
                 {initialTypes.length === 0 ? (
                   <p className="text-sm text-slate-500 italic p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
                     No custom categories defined.
@@ -210,7 +210,7 @@ export default function SettingsClient({
             </div>
           </div>
 
-          <div className="divide-y divide-slate-100 dark:divide-slate-800">
+          <div className="divide-y divide-slate-100 dark:divide-slate-800 max-h-96 overflow-y-auto">
             {initialProfiles.length === 0 ? (
               <div className="py-16 text-center">
                 <span className="material-symbols-outlined text-4xl text-slate-300 dark:text-slate-600 block mb-3">
@@ -231,41 +231,41 @@ export default function SettingsClient({
                   .slice(0, 2)
 
                 return (
-                  <div key={profile.id} className="p-5 flex items-center justify-between gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-bold flex items-center justify-center border border-blue-200 dark:border-blue-800 text-sm">
+                  <div key={profile.id} className="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors min-w-max sm:min-w-0">
+                    <div className="flex items-center gap-4 min-w-0 flex-1">
+                      <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-bold flex items-center justify-center border border-blue-200 dark:border-blue-800 text-sm flex-shrink-0">
                         {initials}
                       </div>
-                      <div>
-                        <div className="flex items-center gap-2">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
                             {profile.full_name || 'Unnamed User'}
                           </p>
                           {isCurrentUser && (
-                            <span className="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded">
+                            <span className="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded flex-shrink-0">
                               You
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-slate-500 mt-0.5">{profile.email}</p>
+                        <p className="text-xs text-slate-500 mt-0.5 truncate">{profile.email}</p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-6 flex-wrap sm:flex-nowrap justify-start sm:justify-end sm:ml-4 w-full sm:w-auto">
                       {/* Current role badge */}
-                      <span className={`text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border ${cfg.bg} ${cfg.color}`}>
+                      <span className={`text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border flex-shrink-0 ${cfg.bg} ${cfg.color}`}>
                         {cfg.label}
                       </span>
 
                       {/* Role selector — disabled for self */}
                       {!isCurrentUser && (
-                        <div className="relative">
+                        <div className="relative flex-shrink-0">
                           <select
                             id={`role-select-${profile.id}`}
                             value={profile.role}
                             disabled={isUpdating}
                             onChange={(e) => handleRoleChange(profile.id, e.target.value as Role)}
-                            className="appearance-none bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg pl-3 pr-8 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:ring-2 focus:ring-blue-500/20 outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="appearance-none bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg pl-3 pr-8 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:ring-2 focus:ring-blue-500/20 outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                           >
                             <option value="viewer">Viewer</option>
                             <option value="accountant">Accountant</option>
@@ -278,7 +278,7 @@ export default function SettingsClient({
                       )}
 
                       {isCurrentUser && (
-                        <span className="text-xs text-slate-400 italic">Cannot modify</span>
+                        <span className="text-xs text-slate-400 italic flex-shrink-0 whitespace-nowrap">Cannot modify</span>
                       )}
                     </div>
                   </div>
